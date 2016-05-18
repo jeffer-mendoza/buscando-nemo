@@ -1,0 +1,18 @@
+##para intellig
+.idea/
+META-INF/
+out/
+*.iml
+*.xml
+*.properties
+*.jar
+*.class
+
+##para netbeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/
