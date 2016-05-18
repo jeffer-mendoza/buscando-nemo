@@ -1,6 +1,6 @@
-package noinformada;
+package Model.NoInformada;
 
-import Main.Personaje;
+import Model.Personaje;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

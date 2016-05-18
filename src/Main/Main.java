@@ -1,6 +1,6 @@
 package Main;
 
-import noinformada.Amplitud;
+import Model.NoInformada.Amplitud;
 
 
 /**

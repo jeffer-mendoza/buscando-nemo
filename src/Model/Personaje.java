@@ -1,4 +1,4 @@
-package Main;
+package Model;
 
 /**
  * Created by jeffer on 13/05/16.

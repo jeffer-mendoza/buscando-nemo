@@ -1,7 +1,5 @@
 package Model;
 
-import Main.Personaje;
-
 /**
  * Created by jeffer on 18/05/16.
  */
