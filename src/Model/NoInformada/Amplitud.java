@@ -12,24 +12,24 @@ import Model.AlgoritmoBusqueda;
  */
 public class Amplitud extends AlgoritmoBusqueda {
 
-    LinkedList<byte[]> cola;//estructura que manejara los nodos que se vayan creando
-    ArrayList<byte[]> historial;//guarda el historial de todos los padres
+    private LinkedList<int[]> cola;//estructura que manejara los nodos que se vayan creando
+
 
     public Amplitud(byte[][] matriz, byte n) {
         super(matriz,n);
-        this.cola = new LinkedList<byte[]>();//se inicializa la cola
-        byte[] nodo = {1, 0, 0, -1, -1};
+        this.cola = new LinkedList<int[]>();//se inicializa la cola
+        int[] nodo = {0, 0, 0, 0};
         this.expandirNodo(nodo);//se expanden los nodos de la raiz
     }
 
 
 
     public void run() {
-        System.out.println(this.n);
         while (this.numeroMetas < 3) {
-            byte[] nodo = this.cola.getFirst();//obtiene el nodo de izquierda a derecha
+            int[] nodo = this.cola.getFirst();//obtiene el nodo de izquierda a derecha
             if (nodo[0] == this.metaActual) {//verifica si es meta
                 this.numeroMetas++;
+                //todo borrar la meta de la matriz
                 if (this.numeroMetas == 1) {
                     this.metaActual = Personaje.MARLIN;
                 } else {
@@ -37,6 +37,8 @@ public class Amplitud extends AlgoritmoBusqueda {
                         this.metaActual = Personaje.DORI;
                     }else{
                         //si se da es porque se cumplieron las tres metas y no permite expandir mas nodos
+                        this.historialPadres.add(nodo);
+                        this.mostrarRuta();
                         break;
                     }
                 }
@@ -57,44 +59,45 @@ public class Amplitud extends AlgoritmoBusqueda {
      * <p>
      * Teoricamente es la expasión del nodo que no son meta.
      */
-    private void expandirNodo(byte[] nodo) {
+    private void expandirNodo(int[] nodo) {
         this.nodoExpandidos++;//se ha expandido un nuevo nodo
-        byte i = nodo[1];//obtiene la fila del nodo actual
-        byte j = nodo[2];//obtiene la columna del noto actual
+        this.historialPadres.add(nodo);//se agrega nodo al historial de padres
+        int i = nodo[1];//obtiene la fila del nodo actual
+        int j = nodo[2];//obtiene la columna del noto actual
         if (i - 1 >= 0) {
-            this.crearNodo((byte) (i - 1), j, i, j);
+            this.crearNodo(i - 1, j, this.idsHistorialPadres);
         }
         if (i + 1 < this.n) {
-            this.crearNodo((byte) (i + 1), j, i, j);
+            this.crearNodo(i + 1, j, this.idsHistorialPadres);
         }
         if (j - 1 >= 0) {
-            this.crearNodo(i, (byte) (j - 1), i, j);
+            this.crearNodo(i, j - 1, this.idsHistorialPadres);
         }
         if (j + 1 < this.n) {
-            this.crearNodo(i, (byte) (j + 1), i, j);
+            this.crearNodo(i, j + 1, this.idsHistorialPadres);
         }
+        this.idsHistorialPadres++;//aumenta el identificador de indexamiento
 
     }
 
     /**
      * Metodo que crea el nodo con la información más relevante:
-     * <p>
-     * Identificación = El número que representa el nodo en la matriz
-     * Posición (i,j) = la posición en la matriz
-     * Posición (i,j) del padre = la posición en la matriz del padre
+     *
+     *[0] Identificación = El número que representa el nodo en la matriz
+     *[1,2] Posición (i,j) = la posición en la matriz
+     *[3] id = referencia al padre el el array historial
      *
      * @param i      fila de la nueva posición
      * @param j      columna de la nueva posición
-     * @param iPadre fila del padre
-     * @param jPadre columna del padre
-     * @param id identificador del padre
+     * @param padre     identificador del padre
      * @return
      */
-    private void crearNodo(byte i, byte j, byte iPadre, byte jPadre) {
-        byte[] nodo = {this.matriz[i][j], i, j, iPadre, jPadre};
+    private void crearNodo(int i, int j, int padre) {
+        int[] nodo = {this.matriz[i][j],i, j, padre};
         this.cola.add(nodo);
         this.nodoCreados++;
     }
+
 
 
 }
