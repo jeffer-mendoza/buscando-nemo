@@ -25,13 +25,13 @@ public final class Personaje {
      * @param personaje
      * @return
      */
-    public int getCosto(byte personaje)
+    public byte getCosto(byte personaje)
     {
         if(personaje == TIBURON) {
             return 10;
         }
         if(personaje == ACUAMAN) {
-            return 1000;
+            return Byte.MAX_VALUE;
         }
 
         return 1;
