@@ -1,8 +1,8 @@
 package Model.NoInformada;
 
+import Model.Nodo;
 import Model.Personaje;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Model.AlgoritmoBusqueda;
@@ -12,12 +12,12 @@ import Model.AlgoritmoBusqueda;
  */
 public class Amplitud extends AlgoritmoBusqueda {
 
-    private LinkedList<int[]> cola;//estructura que manejara los nodos que se vayan creando
+    private LinkedList<Nodo> cola;//estructura que manejara los nodos que se vayan creando
 
 
     public Amplitud(byte[][] matriz, byte n) {
         super(matriz,n);
-        this.cola = new LinkedList<int[]>();//se inicializa la cola
+        this.cola = new LinkedList<Nodo>();//se inicializa la cola
         int[] nodo = {0, 0, 0, 0};
         this.expandirNodo(nodo);//se expanden los nodos de la raiz
     }
@@ -56,44 +56,42 @@ public class Amplitud extends AlgoritmoBusqueda {
     /**
      * Determina los posibles cambios de estado que tiene el entorno, basicamente
      * agrega a la cola los posibles movimientos en el tablero.
-     * <p>
      * Teoricamente es la expasión del nodo que no son meta.
+     *
+     * @param nodo
      */
-    private void expandirNodo(int[] nodo) {
+    private void expandirNodo(Nodo nodo) {
         this.nodoExpandidos++;//se ha expandido un nuevo nodo
         this.historialPadres.add(nodo);//se agrega nodo al historial de padres
-        int i = nodo[1];//obtiene la fila del nodo actual
-        int j = nodo[2];//obtiene la columna del noto actual
+        byte i = nodo.getFila();//obtiene la fila del nodo actual
+        byte j = nodo.getColumna();//obtiene la columna del noto actual
         if (i - 1 >= 0) {
-            this.crearNodo(i - 1, j, this.idsHistorialPadres);
+            this.crearNodo((byte)(i - 1), j, this.idsHistorialPadres, nodo);
         }
         if (i + 1 < this.n) {
-            this.crearNodo(i + 1, j, this.idsHistorialPadres);
+            this.crearNodo((byte)(i + 1), j, this.idsHistorialPadres, nodo);
         }
         if (j - 1 >= 0) {
-            this.crearNodo(i, j - 1, this.idsHistorialPadres);
+            this.crearNodo(i, (byte)(j - 1), this.idsHistorialPadres, nodo);
         }
         if (j + 1 < this.n) {
-            this.crearNodo(i, j + 1, this.idsHistorialPadres);
+            this.crearNodo(i, (byte)(j + 1), this.idsHistorialPadres, nodo);
         }
         this.idsHistorialPadres++;//aumenta el identificador de indexamiento
 
     }
 
     /**
-     * Metodo que crea el nodo con la información más relevante:
+     * Metodo que crea un nuevo nodo
      *
-     *[0] Identificación = El número que representa el nodo en la matriz
-     *[1,2] Posición (i,j) = la posición en la matriz
-     *[3] id = referencia al padre el el array historial
      *
      * @param i      fila de la nueva posición
      * @param j      columna de la nueva posición
      * @param padre     identificador del padre
      * @return
      */
-    private void crearNodo(int i, int j, int padre) {
-        int[] nodo = {this.matriz[i][j],i, j, padre};
+    private void crearNodo(byte i, byte j, int padreId, Nodo nodoPadre) {
+        Nodo nodo = new Nodo(padreId,i, j,nodoPadre.getMatriz(),nodoPadre.getMetasCumplidas());
         this.cola.add(nodo);
         this.nodoCreados++;
     }
