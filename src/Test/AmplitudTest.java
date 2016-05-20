@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
  */
 public class AmplitudTest {
 
+
     @Test
     public void testRun() throws Exception {
         byte matriz [][] = {{0,2,2,1,1},{ 2,3,4,2,7},{2,1,2,8,1},{1,1,3,2,1},{2,6,2,4,5}};
@@ -20,15 +21,8 @@ public class AmplitudTest {
         long tFin = System.currentTimeMillis();
         long tiempo = tFin - tInicio;
         System.out.println("Tiempo de ejecución: " + tiempo + "ms");
+        assertEquals(1,1);
     }
 
-    @Test
-    public void testToString() throws Exception {
 
-    }
-
-    @Test
-    public void testMostrarRuta() throws Exception {
-
-    }
 }
