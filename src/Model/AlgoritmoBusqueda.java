@@ -44,16 +44,17 @@ public class AlgoritmoBusqueda {
      * todos sus ancestros
      */
     protected String mostrarRuta() {
-        String ruta = "";
+
         Nodo nodo = this.historialPadres.getLast();
-        int index = 0;
+        int index = nodo.getPadre();
+        String ruta = nodo.toString();
         while (true) {
-            ruta += nodo;
+            index = nodo.getPadre();
+            nodo = this.historialPadres.get(index);
+            ruta = nodo + "-->"+ruta;
             if(index == 0){
                 break;
             }
-            index = nodo.getPadre();
-            nodo = this.historialPadres.get(index);
         }
         return ruta;
     }
