@@ -2,7 +2,9 @@ package Model.NoInformada;
 
 import Model.Nodo;
 import Model.Personaje;
+
 import java.util.LinkedList;
+
 import Model.AlgoritmoBusqueda;
 
 /**
@@ -16,7 +18,7 @@ public class Amplitud extends AlgoritmoBusqueda {
     public Amplitud(byte[][] matriz, byte n) {
         super(matriz, n);
         this.cola = new LinkedList<Nodo>();//se inicializa la cola
-        Nodo nodo = new Nodo(0, (byte) 0, (byte) 0, this.matriz.clone(), (byte) 0, Personaje.NEMO);
+        Nodo nodo = new Nodo(0, (byte) 0, (byte) 0, this.matriz.clone(), (byte) 0, Personaje.NEMO, (byte)0);
         this.cola.add(nodo);
         this.expandirNodo(nodo);//se expanden los nodos de la raiz
     }
@@ -28,12 +30,15 @@ public class Amplitud extends AlgoritmoBusqueda {
             nodo = this.cola.getFirst();//obtiene el nodo de izquierda a derecha
             if (nodo.isMeta()) {//verifica si es meta
                 //todo borrar la meta de la matriz
-                System.out.print("encontro "+nodo.getMetaActual());
                 if (nodo.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
+                    this.costoTotal = nodo.getCostoAcomulado();
+                    this.historialPadres.add(nodo);
+                    this.idsHistorialPadres++;
+
                     break;
                 }
-                System.out.println(" -- ir por "+nodo.getMetaActual()+ " "+nodo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 );
-                nodo.mostrarMatriz();
+//                System.out.println(" -- ir por " + nodo.getMetaActual() + " " + nodo + " cola: "+this.nodoCreados);
+                //nodo.mostrarMatriz();
             }
             this.expandirNodo(nodo);//expandir el nodo
         }
@@ -74,19 +79,30 @@ public class Amplitud extends AlgoritmoBusqueda {
      * Metodo que crea un nuevo nodo, también se comprueba
      * que el nodo no se este devolviendo
      *
-     * @param i     fila de la nueva posición
-     * @param j     columna de la nueva posición
-     * @param padreId identificador del padre
+     * @param i         fila de la nueva posición
+     * @param j         columna de la nueva posición
+     * @param padreId   identificador del padre
      * @param nodoPadre nodo padre del nodo que será creado
      * @return
      */
-    private void crearNodo(byte i, byte j, int padreId, Nodo nodoPadre) {
-        if(!(i == nodoPadre.getFila() && j == nodoPadre.getColumna())) {
-            Nodo nodo = new Nodo(padreId, i, j, nodoPadre.getMatriz(), nodoPadre.getMetasCumplidas(), nodoPadre.getMetaActual());
-            this.cola.add(nodo);
+    private int crearNodo(byte i, byte j, int padreId, Nodo nodoPadre) {
+        if (nodoPadre.getMatriz()[i][j] == Personaje.ROCA) {
+            //no crea el nodo solo lo suma
             this.nodoCreados++;
-        }
-    }
 
+            return 0;
+        }
+        if (nodoPadre.getMatriz()[i][j] == Personaje.ACUAMAN) {
+
+            return 0;
+        }
+
+        Nodo nodo = new Nodo(padreId, i, j, nodoPadre.getMatriz(), nodoPadre.getMetasCumplidas(), nodoPadre.getMetaActual(),nodoPadre.getFactorReduccion());
+        nodo.setCostoAcomulado(nodoPadre.getCostoAcomulado());
+        this.cola.add(nodo);
+        this.nodoCreados++;
+
+        return 1;
+    }
 
 }
