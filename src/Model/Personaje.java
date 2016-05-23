@@ -25,7 +25,7 @@ public final class Personaje {
      * @param personaje
      * @return
      */
-    public byte getCosto(byte personaje)
+    public static byte getCosto(byte personaje)
     {
         if(personaje == TIBURON) {
             return 10;
