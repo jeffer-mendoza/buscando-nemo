@@ -10,16 +10,22 @@ public class Nodo {
     private byte metasCumplidas;
     private byte metaActual;
     private byte[][] matriz;
-    private long costoAcomulado;//conocer el costo acumulado en el momento
+    private double costoAcomulado;//conocer el costo acumulado en el momento
 
-    public Nodo(int padre, byte fila, byte columna, byte[][] matriz, byte metasCumplidas, byte metaActual) {
+    //factor reducción permite implementar la ayuda de la tortuga en 4 pasos y será decrementando a medida que es usada
+    //cuando llega a 0 es porque ya se ha agotado y no se tiene este beneficio de reducir costos (ver método setCostoAcomulado)
+    private byte factorReduccion;
+
+
+    public Nodo(int padre, byte fila, byte columna, byte[][] matriz, byte metasCumplidas, byte metaActual, byte factorReduccion) {
         this.padre = padre;
         this.fila = fila;
         this.columna = columna;
-        this.matriz = matriz;
+        this.cloneMatriz(matriz);
         this.metasCumplidas = metasCumplidas;
         this.metaActual = metaActual;
         this.personaje = this.matriz[fila][columna];
+        this.setFactorReduccion(factorReduccion);
     }
 
 
@@ -49,7 +55,7 @@ public class Nodo {
     public boolean isMetaGlobal() {
         if (this.personaje == Personaje.NEMO) {
             this.metasCumplidas = 1;
-            this.matriz[this.fila][this.columna]= Personaje.DISPONIBLE;
+            this.matriz[this.fila][this.columna] = Personaje.DISPONIBLE;
             this.metaActual = Personaje.MARLIN;
 
             return false;
@@ -57,7 +63,7 @@ public class Nodo {
         if (this.personaje == Personaje.MARLIN) {
             this.metasCumplidas = 2;
             this.metaActual = Personaje.DORI;
-            this.matriz[this.fila][this.columna]= Personaje.DISPONIBLE;
+            this.matriz[this.fila][this.columna] = Personaje.DISPONIBLE;
 
             return false;
         } else {
@@ -68,21 +74,16 @@ public class Nodo {
     /**
      * Método que permite mostrar la matriz
      */
-    public void mostrarMatriz()
-    {
+    public void mostrarMatriz() {
         int n = this.matriz.length;
 
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                System.out.print(matriz[i][j]+" ");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.print(matriz[i][j] + " ");
             }
             System.out.println();
         }
     }
-
-
 
 
     /************************
@@ -151,6 +152,61 @@ public class Nodo {
 
     public void setMetaActual(byte metaActual) {
         this.metaActual = metaActual;
+    }
+
+    public double getCostoAcomulado() {
+        return costoAcomulado;
+    }
+
+    /**
+     * En este método se implementa la sumatorio de costos y se aplica la estrategia del factor de reducción
+     * el cual es accionado cuando se halla una tortuga, y los siguientes 4 pasos se tiene una reducción del 50% en los
+     * costos de las casillas por donde pase el robot.
+     *
+     * @param costoAcomulado
+     */
+    public void setCostoAcomulado(double costoAcomulado) {
+        if(this.factorReduccion > 0){
+            this.costoAcomulado = costoAcomulado + Personaje.getCosto(this.personaje) * 0.5d;
+            this.factorReduccion--;
+        }else{
+            this.costoAcomulado = costoAcomulado + Personaje.getCosto(this.personaje);
+        }
+
+    }
+
+    public byte getFactorReduccion() {
+        return factorReduccion;
+    }
+
+    /**
+     * Al setear el factor de reducción(ver descripción en la definición del atributo) se tiene en cuenta que este se
+     * activa cuando se encuentra una tortuga, y está sera unica en los 4 pasos siguientes, es decir si encuentra otra
+     * tortuga no la tendra en cuenta. También se elimina la tortuga de la matriz
+     * @param factorReduccion
+     */
+    private void setFactorReduccion(byte factorReduccion) {
+        if(factorReduccion == 0){
+            if(this.personaje == Personaje.TORTUGA){
+                this.factorReduccion = 4;
+                this.matriz[this.fila][this.columna] = 2;//se elimina la tortuga de la matriz
+            }
+        }else {
+            this.factorReduccion = factorReduccion;
+        }
+    }
+
+    /**
+     * Permite eliminar la referencia que esta ligada a la matriz del padre
+     * de esta forma aqui se pueden modificar los valores y esto no afecta
+     * las matrices de los padres y vecinos.
+     */
+    private void cloneMatriz(byte [][]matriz){
+        byte n = (byte)matriz.length;
+        this.matriz = new byte[n][n];
+        for(int i = 0; i < n; i++) {
+            System.arraycopy(matriz[i], 0, this.matriz[i], 0, n);
+        }
     }
 
     @Override
