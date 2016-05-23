@@ -12,7 +12,7 @@ public class AlgoritmoBusqueda {
 
     protected long nodoCreados = 0;//los nodos que son creados (size = 2^64)
     protected long nodoExpandidos = 0;//los nodos que son expandidos (size = 2^64)
-    protected long costoTotal = 0;//el costo total de la solución más optima
+    protected double costoTotal = 0;//el costo total de la solución más optima
     protected byte factorRaminicacion = 0;
 
     protected byte numeroMetas = 0;//contador que permite conocer cuando se llega a la última meta
@@ -51,6 +51,8 @@ public class AlgoritmoBusqueda {
         while (true) {
             index = nodo.getPadre();
             nodo = this.historialPadres.get(index);
+            nodo.mostrarMatriz();
+            System.out.println("----------");
             ruta = nodo + "-->"+ruta;
             if(index == 0){
                 break;
