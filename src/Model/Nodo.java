@@ -1,5 +1,7 @@
 package Model;
 
+import java.util.Arrays;
+
 public class Nodo {
 
     private byte personaje;//el identificador del personaje
@@ -166,10 +168,10 @@ public class Nodo {
      * @param costoAcomulado
      */
     public void setCostoAcomulado(double costoAcomulado) {
-        if(this.factorReduccion > 0){
+        if (this.factorReduccion > 0) {
             this.costoAcomulado = costoAcomulado + Personaje.getCosto(this.personaje) * 0.5d;
             this.factorReduccion--;
-        }else{
+        } else {
             this.costoAcomulado = costoAcomulado + Personaje.getCosto(this.personaje);
         }
 
@@ -183,15 +185,16 @@ public class Nodo {
      * Al setear el factor de reducción(ver descripción en la definición del atributo) se tiene en cuenta que este se
      * activa cuando se encuentra una tortuga, y está sera unica en los 4 pasos siguientes, es decir si encuentra otra
      * tortuga no la tendra en cuenta. También se elimina la tortuga de la matriz
+     *
      * @param factorReduccion
      */
     private void setFactorReduccion(byte factorReduccion) {
-        if(factorReduccion == 0){
-            if(this.personaje == Personaje.TORTUGA){
+        if (factorReduccion == 0) {
+            if (this.personaje == Personaje.TORTUGA) {
                 this.factorReduccion = 4;
                 this.matriz[this.fila][this.columna] = 2;//se elimina la tortuga de la matriz
             }
-        }else {
+        } else {
             this.factorReduccion = factorReduccion;
         }
     }
@@ -201,13 +204,25 @@ public class Nodo {
      * de esta forma aqui se pueden modificar los valores y esto no afecta
      * las matrices de los padres y vecinos.
      */
-    private void cloneMatriz(byte [][]matriz){
-        byte n = (byte)matriz.length;
+    private void cloneMatriz(byte[][] matriz) {
+        byte n = (byte) matriz.length;
         this.matriz = new byte[n][n];
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             System.arraycopy(matriz[i], 0, this.matriz[i], 0, n);
         }
+
     }
+
+    public boolean equals(Nodo nodoAbuelo) {
+        if (nodoAbuelo == null) return false;
+        if (fila != nodoAbuelo.fila) return false;
+        if (columna != nodoAbuelo.columna) return false;
+        if (metasCumplidas != nodoAbuelo.metasCumplidas) return false;
+
+        return true;
+
+    }
+
 
     @Override
     public String toString() {

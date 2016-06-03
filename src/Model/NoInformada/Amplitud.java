@@ -18,7 +18,7 @@ public class Amplitud extends AlgoritmoBusqueda {
     public Amplitud(byte[][] matriz, byte n) {
         super(matriz, n);
         this.cola = new LinkedList<Nodo>();//se inicializa la cola
-        Nodo nodo = new Nodo(0, (byte) 0, (byte) 0, this.matriz.clone(), (byte) 0, Personaje.NEMO, (byte)0);
+        Nodo nodo = new Nodo(0, (byte) 0, (byte) 0, this.matriz.clone(), (byte) -99, Personaje.NEMO, (byte) 0);
         this.cola.add(nodo);
         this.expandirNodo(nodo);//se expanden los nodos de la raiz
     }
@@ -29,6 +29,7 @@ public class Amplitud extends AlgoritmoBusqueda {
         while (true) {
             nodo = this.cola.getFirst();//obtiene el nodo de izquierda a derecha
             if (nodo.isMeta()) {//verifica si es meta
+                //System.out.println(nodo);
                 //todo borrar la meta de la matriz
                 if (nodo.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
                     this.costoTotal = nodo.getCostoAcomulado();
@@ -37,8 +38,6 @@ public class Amplitud extends AlgoritmoBusqueda {
 
                     break;
                 }
-//                System.out.println(" -- ir por " + nodo.getMetaActual() + " " + nodo + " cola: "+this.nodoCreados);
-                //nodo.mostrarMatriz();
             }
             this.expandirNodo(nodo);//expandir el nodo
         }
@@ -87,20 +86,27 @@ public class Amplitud extends AlgoritmoBusqueda {
      */
     private int crearNodo(byte i, byte j, int padreId, Nodo nodoPadre) {
         if (nodoPadre.getMatriz()[i][j] == Personaje.ROCA) {
-            //no crea el nodo solo lo suma
-            this.nodoCreados++;
 
             return 0;
         }
         if (nodoPadre.getMatriz()[i][j] == Personaje.ACUAMAN) {
-
+            //no crea el nodo solo se suma a los expandidos
+            this.nodoExpandidos++;
             return 0;
         }
+        Nodo nodoAbuelo = this.historialPadres.get(nodoPadre.getPadre());
 
-        Nodo nodo = new Nodo(padreId, i, j, nodoPadre.getMatriz(), nodoPadre.getMetasCumplidas(), nodoPadre.getMetaActual(),nodoPadre.getFactorReduccion());
-        nodo.setCostoAcomulado(nodoPadre.getCostoAcomulado());
-        this.cola.add(nodo);
-        this.nodoCreados++;
+//
+//        if (this.cola.size() == 0) {
+//            nodoAbuelo = null;
+//        }
+       // if (!nodoPadre.equals(nodoAbuelo)) {
+            Nodo nodo = new Nodo(padreId, i, j, nodoPadre.getMatriz(), nodoPadre.getMetasCumplidas(), nodoPadre.getMetaActual(), nodoPadre.getFactorReduccion());
+            nodo.setCostoAcomulado(nodoPadre.getCostoAcomulado());
+            this.cola.add(nodo);
+            this.nodoCreados++;
+       // }
+
 
         return 1;
     }
