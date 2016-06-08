@@ -1,6 +1,9 @@
 package Main;
 
+import Model.Informada.AEstrella;
+import Model.Informada.Avara;
 import Model.NoInformada.Amplitud;
+import Model.NoInformada.CostoUniforme;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -11,23 +14,25 @@ import java.util.StringTokenizer;
 
 public class Main
 {
-    private static int[][] matriz;
+    private static byte[][] matriz;
 
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
         //todo realizar el menú para seleccinar que tipo de algoritmo se desea ejecutar
         //todo la ruta de la matriz puede venir como args[] del main
-        //lecturaArchivo("./pruebas/prueba1.txt");
+        lecturaArchivo("./pruebas/prueba10.txt");
         //mostrarMatriz();
-
-        byte matriz [][] = {{0,2,2,1,1},{ 2,3,4,2,7},{2,1,2,8,1},{1,1,3,2,1},{2,6,2,4,5}};
+        //byte matriz [][] = {{0,2,2,1,1},{ 2,3,4,2,7},{2,1,2,8,1},{1,1,3,2,1},{2,6,2,4,5}};
         byte n = 5;
-        Amplitud amplitud = new Amplitud(matriz, n);
+        //Amplitud algoritmo = new Amplitud(matriz, n);
+        //CostoUniforme algoritmo = new CostoUniforme(matriz,n);
+        Avara algoritmo = new Avara(matriz,n,0);
+        //AEstrella algoritmo = new AEstrella(matriz,n,0);
         long tInicio = System.currentTimeMillis();
-        amplitud.run();
+        algoritmo.run();
         long tFin = System.currentTimeMillis();
         long tiempo = tFin - tInicio;
-        System.out.println("Tiempo de ejecución: " + tiempo + "ms");
+        System.out.println("Tiempo de ejecución: " + tiempo + "ms = " + tiempo/1000+ "s");
     }
 
     /**
@@ -48,14 +53,14 @@ public class Main
             while ((cadena = buffer.readLine()) != null) {
                 if (iterador == 0) {
                     tamanoMatriz = Integer.parseInt(cadena);
-                    matriz = new int[tamanoMatriz][tamanoMatriz];
+                    matriz = new byte[tamanoMatriz][tamanoMatriz];
                 } else {
                     StringTokenizer st = new StringTokenizer(cadena);
 
                     int j = 0;
                     while (st.hasMoreElements()) {
                         String token = st.nextElement().toString();
-                        matriz[iterador - 1][j] = Integer.parseInt(token);
+                        matriz[iterador - 1][j] = Byte.parseByte(token);
                         j++;
                     }
                 }
