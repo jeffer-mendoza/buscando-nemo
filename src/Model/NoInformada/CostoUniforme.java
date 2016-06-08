@@ -51,26 +51,23 @@ public class CostoUniforme extends AlgoritmoBusqueda
         byte i = nodoActual.getFila();//obtiene la fila del nodo actual
         byte j = nodoActual.getColumna();//obtiene la columna del noto actual
 		Nodo nodoAbuelo = this.historialPadres.get(nodoActual.getPadre());
+		if (i + 1 < this.n)
+		{
+			this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodoActual,nodoAbuelo);
+		}
+		if (j + 1 < this.n)
+		{
+			this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodoActual,nodoAbuelo);
+		}
 		if (i - 1 >= 0)
         {
             this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodoActual,nodoAbuelo);
         }
-        
-        if (i + 1 < this.n) 
-        {
-            this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodoActual,nodoAbuelo);
-        }
-        
-        if (j - 1 >= 0) 
+        if (j - 1 >= 0)
         {
             this.crearNodo(i, (byte) (j - 1), this.idsHistorialPadres, nodoActual,nodoAbuelo);
         }
-        
-        if (j + 1 < this.n) 
-        {
-            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodoActual,nodoAbuelo);
-        }
-        
+
         this.idsHistorialPadres++;//aumenta el identificador de indexamiento
 	}
 	
@@ -96,7 +93,7 @@ public class CostoUniforme extends AlgoritmoBusqueda
 			return;
 		}
 
-        if(!(i == nodoActual.getFila() && j == nodoActual.getColumna()) && nodoActual.getMatriz()[i][j] != 1)
+        if(!(i == nodoActual.getFila() && j == nodoActual.getColumna()&& nodoAbuelo.getMetaActual() == nodoActual.getMetaActual()))
         {
             Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(), nodoActual.getFactorReduccion());
             nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
