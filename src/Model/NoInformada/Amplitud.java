@@ -2,9 +2,7 @@ package Model.NoInformada;
 
 import Model.Nodo;
 import Model.Personaje;
-
 import java.util.LinkedList;
-
 import Model.AlgoritmoBusqueda;
 
 /**
@@ -19,7 +17,7 @@ public class Amplitud extends AlgoritmoBusqueda {
         super(matriz, n);
         this.cola = new LinkedList<Nodo>();//se inicializa la cola
         Nodo nodo = new Nodo(0, (byte) 0, (byte) 0, this.matriz.clone(), (byte) -99, Personaje.NEMO, (byte) 0);
-        this.cola.add(nodo);
+        this.cola.add(this.getNodoInicial());
         this.expandirNodo(nodo);//se expanden los nodos de la raiz
     }
 
@@ -29,10 +27,8 @@ public class Amplitud extends AlgoritmoBusqueda {
         while (true) {
             nodo = this.cola.getFirst();//obtiene el nodo de izquierda a derecha
             if (nodo.isMeta()) {//verifica si es meta
-                //System.out.println(nodo);
-                //todo borrar la meta de la matriz
                 if (nodo.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
-                    this.costoTotal = nodo.getCostoAcomulado();
+                    this.costoTotal = nodo.getCostoAcumulado();
                     this.historialPadres.add(nodo);
                     this.idsHistorialPadres++;
 
@@ -58,18 +54,21 @@ public class Amplitud extends AlgoritmoBusqueda {
         this.historialPadres.add(nodo);//se agrega nodo al historial de padres
         byte i = nodo.getFila();//obtiene la fila del nodo actual
         byte j = nodo.getColumna();//obtiene la columna del noto actual
-        if (i - 1 >= 0) {
-            this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodo);
+        Nodo nodoAbuelo = this.historialPadres.get(nodo.getPadre());
+        if (i + 1 < this.n) {//ir a abajo
+            this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodo, nodoAbuelo);
         }
-        if (i + 1 < this.n) {
-            this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodo);
+        if (j + 1 < this.n) {//ir a la derecha
+            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodo, nodoAbuelo);
         }
-        if (j - 1 >= 0) {
-            this.crearNodo(i, (byte) (j - 1), this.idsHistorialPadres, nodo);
+        if (i - 1 >= 0) {//ir arriba
+            this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodo, nodoAbuelo);
         }
-        if (j + 1 < this.n) {
-            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodo);
+
+        if (j - 1 >= 0) {//i a la izquierda
+            this.crearNodo(i, (byte) (j - 1), this.idsHistorialPadres, nodo, nodoAbuelo);
         }
+
         this.idsHistorialPadres++;//aumenta el identificador de indexamiento
 
     }
@@ -81,34 +80,25 @@ public class Amplitud extends AlgoritmoBusqueda {
      * @param i         fila de la nueva posición
      * @param j         columna de la nueva posición
      * @param padreId   identificador del padre
-     * @param nodoPadre nodo padre del nodo que será creado
-     * @return
+     * @param nodoActual nodo padre del nodo que será creado
      */
-    private int crearNodo(byte i, byte j, int padreId, Nodo nodoPadre) {
-        if (nodoPadre.getMatriz()[i][j] == Personaje.ROCA) {
+    private void crearNodo(byte i, byte j, int padreId, Nodo nodoActual, Nodo nodoAbuelo) {
+        if (nodoActual.getMatriz()[i][j] == Personaje.ROCA) {
 
-            return 0;
+            return;
         }
-        if (nodoPadre.getMatriz()[i][j] == Personaje.ACUAMAN) {
+        if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
             //no crea el nodo solo se suma a los expandidos
             this.nodoExpandidos++;
-            return 0;
+            return;
         }
-        Nodo nodoAbuelo = this.historialPadres.get(nodoPadre.getPadre());
 
-//
-//        if (this.cola.size() == 0) {
-//            nodoAbuelo = null;
-//        }
-       // if (!nodoPadre.equals(nodoAbuelo)) {
-            Nodo nodo = new Nodo(padreId, i, j, nodoPadre.getMatriz(), nodoPadre.getMetasCumplidas(), nodoPadre.getMetaActual(), nodoPadre.getFactorReduccion());
-            nodo.setCostoAcomulado(nodoPadre.getCostoAcomulado());
+        if (!(nodoAbuelo.getFila() == i && nodoAbuelo.getColumna() == j && nodoAbuelo.getMetaActual() == nodoActual.getMetaActual())) {
+            Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(), nodoActual.getFactorReduccion());
+            nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
             this.cola.add(nodo);
             this.nodoCreados++;
-       // }
-
-
-        return 1;
+        }
     }
 
 }
