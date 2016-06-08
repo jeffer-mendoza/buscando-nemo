@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Arrays;
-
 public class Nodo {
 
     private byte personaje;//el identificador del personaje
@@ -12,10 +10,12 @@ public class Nodo {
     private byte metasCumplidas;
     private byte metaActual;
     private byte[][] matriz;
-    private double costoAcomulado;//conocer el costo acumulado en el momento
+    private double costoAcumulado;//conocer el costo acumulado en el momento
+    private double valorHeuristica;
+    private double fN;
 
     //factor reducción permite implementar la ayuda de la tortuga en 4 pasos y será decrementando a medida que es usada
-    //cuando llega a 0 es porque ya se ha agotado y no se tiene este beneficio de reducir costos (ver método setCostoAcomulado)
+    //cuando llega a 0 es porque ya se ha agotado y no se tiene este beneficio de reducir costos (ver método setCostoAcumulado)
     private byte factorReduccion;
 
 
@@ -156,8 +156,24 @@ public class Nodo {
         this.metaActual = metaActual;
     }
 
-    public double getCostoAcomulado() {
-        return costoAcomulado;
+    public double getCostoAcumulado() {
+        return costoAcumulado;
+    }
+
+    public double getValorHeuristica() {
+        return valorHeuristica;
+    }
+
+    public void setValorHeuristica(double valorHeuristica) {
+        this.valorHeuristica = valorHeuristica;
+    }
+
+    public double getfN() {
+        return fN;
+    }
+
+    public void setfN() {
+        this.fN = this.costoAcumulado+this.valorHeuristica;
     }
 
     /**
@@ -165,14 +181,14 @@ public class Nodo {
      * el cual es accionado cuando se halla una tortuga, y los siguientes 4 pasos se tiene una reducción del 50% en los
      * costos de las casillas por donde pase el robot.
      *
-     * @param costoAcomulado
+     * @param costoAcumulado
      */
-    public void setCostoAcomulado(double costoAcomulado) {
+    public void setCostoAcumulado(double costoAcumulado) {
         if (this.factorReduccion > 0) {
-            this.costoAcomulado = costoAcomulado + Personaje.getCosto(this.personaje) * 0.5d;
+            this.costoAcumulado = costoAcumulado + Personaje.getCosto(this.personaje) * 0.5d;
             this.factorReduccion--;
         } else {
-            this.costoAcomulado = costoAcomulado + Personaje.getCosto(this.personaje);
+            this.costoAcumulado = costoAcumulado + Personaje.getCosto(this.personaje);
         }
 
     }
