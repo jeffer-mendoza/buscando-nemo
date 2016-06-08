@@ -13,7 +13,6 @@ public class AlgoritmoBusqueda {
     protected long nodoCreados = 0;//los nodos que son creados (size = 2^64)
     protected long nodoExpandidos = 0;//los nodos que son expandidos (size = 2^64)
     protected double costoTotal = 0;//el costo total de la solución más optima
-    protected byte factorRaminicacion = 0;
 
     protected byte numeroMetas = 0;//contador que permite conocer cuando se llega a la última meta
 
@@ -31,12 +30,15 @@ public class AlgoritmoBusqueda {
 
     @Override
     public String toString() {
+        double factorRamificacion = Math.ceil((double)this.nodoCreados / this.nodoExpandidos);
+        double nivel = Math.log10(this.nodoCreados) / Math.log10(factorRamificacion);
         return
                 "\nPasos Solución: "+this.mostrarRuta() +
-                "\nNodos Expandidos: " + this.nodoCreados +
-                "\nNodos Creados: " + this.nodoExpandidos +
+                "\nNodos Expandidos: " + this.nodoExpandidos +
+                "\nNodos Creados: " + this.nodoCreados +
                 "\nCosto total Solución: " + this.costoTotal +
-                "\nFactor de Ramificación: " + this.factorRaminicacion;
+                "\nFactor de Ramificación: " + factorRamificacion+
+                "\nNivel: " + Math.ceil(nivel);
     }
 
     /**
