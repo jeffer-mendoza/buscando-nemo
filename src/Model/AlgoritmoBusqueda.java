@@ -61,4 +61,26 @@ public class AlgoritmoBusqueda {
         return ruta;
     }
 
+    /**
+     * Identifica donde se cuentra el robot inicialmente
+     *
+     * @return Nodo
+     */
+    public Nodo getNodoInicial()
+    {
+        byte posX = 0;
+        byte posY = 0;
+        for (byte i = 0; i < matriz.length; i++) {
+            for (byte j = 0; j < matriz.length; j++) {
+                if(matriz[i][j] == 0)
+                {
+                    posX = i;
+                    posY = j;
+                }
+            }
+        }
+
+        return  new Nodo(0, posX, posY, this.matriz, (byte) 0, Personaje.NEMO, (byte)0);
+    }
+
 }
