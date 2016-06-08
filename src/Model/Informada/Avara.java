@@ -96,8 +96,6 @@ public class Avara extends AlgoritmoBusqueda {
             Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(),nodoActual.getFactorReduccion());
             nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
             nodo.setValorHeuristica(this.primeraHeuristica(i, j, listadoMetas[nodoActual.getMetasCumplidas()]));
-            //System.out.println(nodoActual.getValorHeuristica()+" - "+nodoActual.getCostoAcumulado()+" - "+nodo.getMetaActual());
-            System.out.println(nodo + " - " + nodo.getValorHeuristica() + " - " + nodo.getMetasCumplidas());
             this.cola.add(nodo);
             this.nodoCreados++;
 
