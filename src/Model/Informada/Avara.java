@@ -3,6 +3,7 @@ package Model.Informada;
 import java.awt.Point;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+
 import Model.AlgoritmoBusqueda;
 import Model.Comparador.ComparadorCostosAvara;
 import Model.Nodo;
@@ -12,9 +13,10 @@ public class Avara extends AlgoritmoBusqueda {
 
     private Comparator<Nodo> comparador;
     private PriorityQueue<Nodo> cola;
-    //distanciasMetas es la heruristica que será usada donde cada posición del arreglo
-    //es la norma del vector formado por la suma de las metas restantes
-    private byte[] distanciasMetas;
+
+    private double[] distanciasMetas = new double[2];//almacena las distancia de meta1-meta2 + meta2-meta3 y meta2-meta3
+    private byte[] X = new byte[3];//posiciones de metas en filas
+    private byte[] Y = new byte[3];//posiciones de metas en columnas
 
     public Avara(byte[][] matriz, byte n, int tipoHeuristica) {
         super(matriz, n);
@@ -58,7 +60,7 @@ public class Avara extends AlgoritmoBusqueda {
         }
 
         if (j + 1 < this.n) {
-            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodo,nodoAbuelo);
+            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodo, nodoAbuelo);
         }
 
         if (i - 1 >= 0) {
@@ -70,7 +72,6 @@ public class Avara extends AlgoritmoBusqueda {
         }
 
 
-
         this.idsHistorialPadres++;//aumenta el identificador de indexamiento
     }
 
@@ -78,9 +79,9 @@ public class Avara extends AlgoritmoBusqueda {
      * Metodo que crea un nuevo nodo, también se comprueba
      * que el nodo no se este devolviendo
      *
-     * @param i         fila de la nueva posicion
-     * @param j         columna de la nueva posicion
-     * @param padreId   identificador del padre
+     * @param i          fila de la nueva posicion
+     * @param j          columna de la nueva posicion
+     * @param padreId    identificador del padre
      * @param nodoActual nodo padre del nodo que será creado
      * @return
      */
@@ -96,9 +97,9 @@ public class Avara extends AlgoritmoBusqueda {
         }
 
         if (!(i == nodoAbuelo.getFila() && j == nodoAbuelo.getColumna() && nodoAbuelo.getMetaActual() == nodoActual.getMetaActual())) {
-            Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(),nodoActual.getFactorReduccion());
+            Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(), nodoActual.getFactorReduccion());
             nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
-            nodo.setValorHeuristica(this.heuristica(i, j, listadoMetas[nodoActual.getMetasCumplidas()]));
+            nodo.setValorHeuristica(this.heuristica(i, j, nodo.getMetasCumplidas()));
             this.cola.add(nodo);
             this.nodoCreados++;
 
@@ -106,47 +107,72 @@ public class Avara extends AlgoritmoBusqueda {
     }
 
     /**
-     * Metodo que retorna el valor de aplicar la heuristica del valor manhattan
+     * Función que implementa la heuristica.
+     *
+     * Heuristica: es la suma de las lineas rectas entre posicion actual y las distancias
+     * rectas entre las metas restantes
      *
      * @param x
      * @param y
-     * @param coordenada
+     * @param metasCumplidas
      * @return
      */
-    public double heuristica(int x, int y, Point coordenada) {
-        double heuristica = Math.abs(x - coordenada.getX()) + Math.abs(y - coordenada.getY());
-        System.out.println(x+" - "+y+" - "+coordenada.getX()+" - "+coordenada.getY());
-        return heuristica;
+    public double heuristica(byte x, byte y, byte metasCumplidas) {
+        if(metasCumplidas == 0){
+
+            return (distanciaPuntos(x,this.X[0],y,this.Y[0]) + this.distanciasMetas[0]) * 0.5 ;
+        }
+        if(metasCumplidas == 1){
+
+            return (distanciaPuntos(x,this.X[1],y,this.Y[1]) + this.distanciasMetas[1])* 0.5;
+        }
+        if(metasCumplidas == 2){
+
+            return (distanciaPuntos(x,this.X[2],y,this.Y[2]))* 0.5;
+        }
+
+        return 0;
     }
 
     public void buscarNodoInicialyMetas() {
         byte posX = 0;
         byte posY = 0;
+        byte personaje;
         for (byte i = 0; i < matriz.length; i++) {
             for (byte j = 0; j < matriz.length; j++) {
+                personaje = matriz[i][j];
 
-                switch (matriz[i][j]) {
-                    case 0:
-                        posX = i;
-                        posY = j;
-                        break;
-                    case Personaje.NEMO:
-                        this.listadoMetas[0] = new Point(i, j);
-                        break;
-                    case Personaje.MARLIN:
-                        this.listadoMetas[1] = new Point(i, j);
-                        break;
-                    case Personaje.DORI:
-                        this.listadoMetas[2] = new Point(i, j);
-                        break;
-                    default:
-                        break;
+                if (personaje == Personaje.ROBOT) {
+                    posX = i;
+                    posY = j;
+                } else {
+                    if (personaje == Personaje.NEMO) {
+                        this.X[0] = i;
+                        this.Y[0] = j;
+                    } else {
+                        if (personaje == Personaje.MARLIN) {
+                            this.X[1] = i;
+                            this.Y[1] = j;
+                        } else {
+                            if (personaje == Personaje.DORI) {
+                                this.X[2] = i;
+                                this.Y[2] = j;
+                            }
+                        }
+                    }
                 }
             }
         }
-
+        double BC = distanciaPuntos(this.X[2],this.X[1],this.Y[2],this.Y[1]);
+        distanciasMetas[0] = distanciaPuntos(this.X[1],this.X[0],this.Y[1],this.Y[0]) + BC;
+        distanciasMetas[1] = BC;
         Nodo primerNodo = new Nodo(0, posX, posY, this.matriz.clone(), (byte) 0, Personaje.NEMO, (byte) 0);
-        primerNodo.setValorHeuristica(this.primeraHeuristica(posX, posY, listadoMetas[0]));
+        primerNodo.setValorHeuristica(this.heuristica(posX, posY, primerNodo.getMetasCumplidas()));
         cola.add(primerNodo);
+    }
+
+    private double distanciaPuntos(byte x0, byte x1, byte y0, byte y1){
+
+        return Math.sqrt(Math.pow(x0 - x1,2) + Math.pow(y0 - y1,2));
     }
 }
