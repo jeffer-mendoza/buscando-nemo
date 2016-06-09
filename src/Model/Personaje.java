@@ -9,6 +9,7 @@ package Model;
  */
 public final class Personaje {
 
+    public static final byte ROBOT = 0;
     public static final byte ROCA = 1;
     public static final byte DISPONIBLE = 2;
     public static final byte TIBURON = 3;
