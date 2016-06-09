@@ -19,6 +19,7 @@ public class AlgoritmoBusqueda {
     //historial de padres
     protected LinkedList<Nodo> historialPadres;//guarda el historial de todos los padres
     protected int idsHistorialPadres = 0;
+    protected byte nivel;
 
     public AlgoritmoBusqueda(byte[][] matriz, byte n) {
         this.matriz = matriz;
@@ -30,15 +31,13 @@ public class AlgoritmoBusqueda {
 
     @Override
     public String toString() {
-        double factorRamificacion = Math.ceil((double)this.nodoCreados / this.nodoExpandidos);
-        double nivel = Math.log10(this.nodoCreados) / Math.log10(factorRamificacion);
         return
                 "\nPasos Solución: "+this.mostrarRuta() +
                 "\nNodos Expandidos: " + this.nodoExpandidos +
                 "\nNodos Creados: " + this.nodoCreados +
                 "\nCosto total Solución: " + this.costoTotal +
-                "\nFactor de Ramificación: " + factorRamificacion+
-                "\nNivel: " + Math.ceil(nivel);
+                "\nFactor de Ramificación: " +  Math.ceil(Math.pow(this.nodoCreados,1d/this.nivel))+
+                "\nNivel: " + this.nivel;
     }
 
     /**
@@ -50,17 +49,20 @@ public class AlgoritmoBusqueda {
         Nodo nodo = this.historialPadres.getLast();
         int index = nodo.getPadre();
         String ruta = nodo.toString();
+        String costo = nodo.getCostoAcumulado()+"";
         while (true) {
             index = nodo.getPadre();
             nodo = this.historialPadres.get(index);
             nodo.mostrarMatriz();
             System.out.println("----------");
             ruta = nodo + "-->"+ruta;
+            costo = nodo.getCostoAcumulado() + " --> "+costo;
+            this.nivel++;
             if(index == 0){
                 break;
             }
         }
-        return ruta;
+        return ruta+"\nCostos nodos: "+costo;
     }
 
     /**
