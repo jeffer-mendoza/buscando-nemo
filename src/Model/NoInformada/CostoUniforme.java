@@ -27,9 +27,9 @@ public class CostoUniforme extends AlgoritmoBusqueda
 		while (true)
         {
 			nodoActual = this.cola.remove();
-			
-			if (nodoActual.isMeta()) 
+			if (nodoActual.isMeta())
 			{
+				System.out.println(nodoActual);
 				if (nodoActual.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
 					this.costoTotal = nodoActual.getCostoAcumulado();
 					this.historialPadres.add(nodoActual);
@@ -93,7 +93,7 @@ public class CostoUniforme extends AlgoritmoBusqueda
 			return;
 		}
 
-        if(!(i == nodoActual.getFila() && j == nodoActual.getColumna()&& nodoAbuelo.getMetaActual() == nodoActual.getMetaActual()))
+        if(!(i == nodoAbuelo.getFila() && j == nodoAbuelo.getColumna() && nodoAbuelo.getMetaActual() == nodoActual.getMetaActual()))
         {
             Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(), nodoActual.getFactorReduccion());
             nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
