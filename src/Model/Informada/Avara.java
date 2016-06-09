@@ -12,13 +12,14 @@ public class Avara extends AlgoritmoBusqueda {
 
     private Comparator<Nodo> comparador;
     private PriorityQueue<Nodo> cola;
-    private Point[] listadoMetas;
+    //distanciasMetas es la heruristica que será usada donde cada posición del arreglo
+    //es la norma del vector formado por la suma de las metas restantes
+    private byte[] distanciasMetas;
 
     public Avara(byte[][] matriz, byte n, int tipoHeuristica) {
         super(matriz, n);
         comparador = new ComparadorCostosAvara();
         cola = new PriorityQueue<Nodo>(10, comparador);
-        listadoMetas = new Point[3];
     }
 
     public void run() {
@@ -27,7 +28,7 @@ public class Avara extends AlgoritmoBusqueda {
 
         while (true) {
             nodoActual = this.cola.remove();
-
+            System.out.println(nodoActual);
             if (nodoActual.isMeta()) {
                 if (nodoActual.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
                     this.costoTotal = nodoActual.getCostoAcumulado();
@@ -52,21 +53,23 @@ public class Avara extends AlgoritmoBusqueda {
         Nodo nodoAbuelo = this.historialPadres.get(nodo.getPadre());
 
         //System.out.println(nodoActual+" - "+nodoActual.getValorHeuristica());
-        if (i - 1 >= 0) {
-            this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodo, nodoAbuelo);
-        }
-
         if (i + 1 < this.n) {
             this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodo, nodoAbuelo);
+        }
+
+        if (j + 1 < this.n) {
+            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodo,nodoAbuelo);
+        }
+
+        if (i - 1 >= 0) {
+            this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodo, nodoAbuelo);
         }
 
         if (j - 1 >= 0) {
             this.crearNodo(i, (byte) (j - 1), this.idsHistorialPadres, nodo, nodoAbuelo);
         }
 
-        if (j + 1 < this.n) {
-            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodo,nodoAbuelo);
-        }
+
 
         this.idsHistorialPadres++;//aumenta el identificador de indexamiento
     }
@@ -95,7 +98,7 @@ public class Avara extends AlgoritmoBusqueda {
         if (!(i == nodoAbuelo.getFila() && j == nodoAbuelo.getColumna() && nodoAbuelo.getMetaActual() == nodoActual.getMetaActual())) {
             Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(),nodoActual.getFactorReduccion());
             nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
-            nodo.setValorHeuristica(this.primeraHeuristica(i, j, listadoMetas[nodoActual.getMetasCumplidas()]));
+            nodo.setValorHeuristica(this.heuristica(i, j, listadoMetas[nodoActual.getMetasCumplidas()]));
             this.cola.add(nodo);
             this.nodoCreados++;
 
@@ -110,9 +113,9 @@ public class Avara extends AlgoritmoBusqueda {
      * @param coordenada
      * @return
      */
-    public double primeraHeuristica(int x, int y, Point coordenada) {
+    public double heuristica(int x, int y, Point coordenada) {
         double heuristica = Math.abs(x - coordenada.getX()) + Math.abs(y - coordenada.getY());
-        //System.out.println(x+" - "+y+" - "+coordenada.getX()+" - "+coordenada.getY());
+        System.out.println(x+" - "+y+" - "+coordenada.getX()+" - "+coordenada.getY());
         return heuristica;
     }
 
@@ -127,13 +130,13 @@ public class Avara extends AlgoritmoBusqueda {
                         posX = i;
                         posY = j;
                         break;
-                    case 7:
+                    case Personaje.NEMO:
                         this.listadoMetas[0] = new Point(i, j);
                         break;
-                    case 6:
+                    case Personaje.MARLIN:
                         this.listadoMetas[1] = new Point(i, j);
                         break;
-                    case 5:
+                    case Personaje.DORI:
                         this.listadoMetas[2] = new Point(i, j);
                         break;
                     default:
