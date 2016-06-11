@@ -29,7 +29,6 @@ public class CostoUniforme extends AlgoritmoBusqueda
 			nodoActual = this.cola.remove();
 			if (nodoActual.isMeta())
 			{
-				System.out.println(nodoActual);
 				if (nodoActual.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
 					this.costoTotal = nodoActual.getCostoAcumulado();
 					this.historialPadres.add(nodoActual);

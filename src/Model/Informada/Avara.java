@@ -30,7 +30,7 @@ public class Avara extends AlgoritmoBusqueda {
 
         while (true) {
             nodoActual = this.cola.remove();
-            System.out.println(nodoActual);
+            System.out.println(nodoActual + " "+this.nodoExpandidos);
             if (nodoActual.isMeta()) {
                 if (nodoActual.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
                     this.costoTotal = nodoActual.getCostoAcumulado();

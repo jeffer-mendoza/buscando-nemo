@@ -32,7 +32,7 @@ public class AlgoritmoBusqueda {
     @Override
     public String toString() {
         return
-                "\nPasos Solución: "+this.mostrarRuta() +
+                this.mostrarRuta() +
                 "\nNodos Expandidos: " + this.nodoExpandidos +
                 "\nNodos Creados: " + this.nodoCreados +
                 "\nCosto total Solución: " + this.costoTotal +
@@ -50,11 +50,12 @@ public class AlgoritmoBusqueda {
         int index = nodo.getPadre();
         String ruta = nodo.toString();
         String costo = nodo.getCostoAcumulado()+"";
+        String matriz = nodo.getFila()+","+nodo.getColumna()+ "\n" +nodo.strMatriz();
         while (true) {
             index = nodo.getPadre();
             nodo = this.historialPadres.get(index);
-            nodo.mostrarMatriz();
-            System.out.println("----------");
+            nodo.setRobot();
+            matriz =  nodo.getFila()+","+nodo.getColumna()+ "\n" +nodo.strMatriz() + matriz;
             ruta = nodo + "-->"+ruta;
             costo = nodo.getCostoAcumulado() + " --> "+costo;
             this.nivel++;
@@ -62,7 +63,8 @@ public class AlgoritmoBusqueda {
                 break;
             }
         }
-        return ruta+"\nCostos nodos: "+costo;
+        matriz = this.n + "\n" + matriz;
+        return matriz + "\nPasos solución:"+ruta+"\nCostos nodos: "+costo;
     }
 
     /**

@@ -87,6 +87,21 @@ public class Nodo {
         }
     }
 
+    /**
+     * Método que permite mostrar la matriz
+     */
+    public String strMatriz() {
+        int n = this.matriz.length;
+        String string = "";
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                string += matriz[i][j]+" ";
+            }
+            string += "\n";
+        }
+        return string;
+    }
+
 
     /************************
      * Metodos Get y Set
@@ -173,7 +188,7 @@ public class Nodo {
     }
 
     public void setfN() {
-        this.fN = this.costoAcumulado+this.valorHeuristica;
+        this.fN = this.costoAcumulado + this.valorHeuristica;
     }
 
     /**
@@ -184,12 +199,17 @@ public class Nodo {
      * @param costoAcumulado
      */
     public void setCostoAcumulado(double costoAcumulado) {
-        if (this.factorReduccion > 0) {
-            this.costoAcumulado = costoAcumulado + Personaje.getCosto(this.personaje) * 0.5d;
-            this.factorReduccion--;
-        } else {
-            this.costoAcumulado = costoAcumulado + Personaje.getCosto(this.personaje);
+        //se elimina la tortuga de la matriz)
+        if (this.matriz[this.fila][this.columna] != Personaje.TORTUGA) {
+            if (this.factorReduccion > 0) {
+                this.costoAcumulado = costoAcumulado + Personaje.getCosto(this.personaje) * 0.5d;
+                this.factorReduccion--;
+
+                return;
+            }
         }
+
+        this.costoAcumulado = costoAcumulado + Personaje.getCosto(this.personaje);
 
     }
 
@@ -208,7 +228,6 @@ public class Nodo {
         if (factorReduccion == 0) {
             if (this.personaje == Personaje.TORTUGA) {
                 this.factorReduccion = 4;
-                this.matriz[this.fila][this.columna] = 2;//se elimina la tortuga de la matriz
             }
         } else {
             this.factorReduccion = factorReduccion;
@@ -243,5 +262,13 @@ public class Nodo {
     @Override
     public String toString() {
         return "(" + fila + ", " + columna + ')';
+    }
+
+    /**
+     * Solo es un metodo que setea la posición del robo, esto para darle
+     * el movimiento al momento de mostrar la interfaz
+     */
+    public void setRobot(){
+        this.matriz[this.fila][this.columna] = 0;
     }
 }

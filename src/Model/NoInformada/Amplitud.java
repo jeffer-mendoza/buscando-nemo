@@ -64,10 +64,15 @@ public class Amplitud extends AlgoritmoBusqueda {
         if (i - 1 >= 0) {//ir arriba
             this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodo, nodoAbuelo);
         }
-
         if (j - 1 >= 0) {//i a la izquierda
             this.crearNodo(i, (byte) (j - 1), this.idsHistorialPadres, nodo, nodoAbuelo);
         }
+
+
+
+
+
+
 
         this.idsHistorialPadres++;//aumenta el identificador de indexamiento
 
