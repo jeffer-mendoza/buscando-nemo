@@ -22,7 +22,7 @@ public class Amplitud extends AlgoritmoBusqueda {
     }
 
 
-    public void run() {
+    public String run() {
         Nodo nodo;
         while (true) {
             nodo = this.cola.getFirst();//obtiene el nodo de izquierda a derecha
@@ -37,7 +37,7 @@ public class Amplitud extends AlgoritmoBusqueda {
             }
             this.expandirNodo(nodo);//expandir el nodo
         }
-        System.out.println(this.toString());
+        return this.toString();
     }
 
 

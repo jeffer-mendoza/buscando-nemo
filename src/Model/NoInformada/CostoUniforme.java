@@ -20,7 +20,7 @@ public class CostoUniforme extends AlgoritmoBusqueda
 		cola.add(this.getNodoInicial());
 	}
 	
-	public void run()
+	public String run()
 	{
 		Nodo nodoActual = null;
 
@@ -38,9 +38,9 @@ public class CostoUniforme extends AlgoritmoBusqueda
 	            }				
 			}
 			this.expandirNodo(nodoActual);//expandir el nodo
-        }	
-				
-		System.out.println(this.toString());
+        }
+
+		return this.toString();
 	}
 	
 	public void expandirNodo(Nodo nodoActual)

@@ -12,43 +12,48 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 
-public class Main
-{
+public class Main {
     private static byte[][] matriz;
     private static byte tamanoMatriz;
 
-    public static void main(String[] args) throws FileNotFoundException, IOException
-    {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
         //todo realizar el menú para seleccinar que tipo de algoritmo se desea ejecutar
         //todo la ruta de la matriz puede venir como args[] del main
-        lecturaArchivo("./pruebas/prueba10.txt");
+        lecturaArchivo(args[1]);
         String stralgoritmo = args[0];
         long tInicio = System.currentTimeMillis();
         long tFin = System.currentTimeMillis();
-        if(stralgoritmo == "amplitud"){
+        String nombre = "";
+        String resultado = "";
+        if (stralgoritmo.equalsIgnoreCase("amplitud")) {
+            nombre = "BUSQUEDA POR AMPLITUD";
             Amplitud algoritmo = new Amplitud(matriz, tamanoMatriz);
             tInicio = System.currentTimeMillis();
-            algoritmo.run();
+            resultado = algoritmo.run();
             tFin = System.currentTimeMillis();
-        }else{
-            if(stralgoritmo == "costouniforme"){
-                Avara algoritmo = new Avara(matriz,tamanoMatriz,0);
+        } else {
+            if (stralgoritmo.equalsIgnoreCase("costouniforme")) {
+                nombre = "BUSQUEDA POR COSTO UNIFORME";
+                CostoUniforme algoritmo = new CostoUniforme(matriz, tamanoMatriz);
                 tInicio = System.currentTimeMillis();
-                algoritmo.run();
+                resultado = algoritmo.run();
                 tFin = System.currentTimeMillis();
-            }else{
-                if(stralgoritmo == "profundidad"){
+            } else {
+                if (stralgoritmo.equalsIgnoreCase("profundidad")) {
+                    nombre = "BUSQUEDA POR PROFUNDIDAD";
 
-                }else{
-                    if(stralgoritmo == "avara"){
-                        Avara algoritmo = new Avara(matriz,tamanoMatriz,0);
+                } else {
+                    if (stralgoritmo.equalsIgnoreCase("avara")) {
+                        nombre = "BUSQUEDA AVARA";
+                        Avara algoritmo = new Avara(matriz, tamanoMatriz, 0);
                         tInicio = System.currentTimeMillis();
-                        algoritmo.run();
+                        resultado = algoritmo.run();
                         tFin = System.currentTimeMillis();
-                    }else{
-                        AEstrella algoritmo = new AEstrella(matriz,tamanoMatriz,0);
+                    } else {
+                        nombre = "BUSQUEDA A*";
+                        AEstrella algoritmo = new AEstrella(matriz, tamanoMatriz, 0);
                         tInicio = System.currentTimeMillis();
-                        algoritmo.run();
+                        resultado = algoritmo.run();
                         tFin = System.currentTimeMillis();
                     }
                 }
@@ -56,7 +61,9 @@ public class Main
         }
 
         long tiempo = tFin - tInicio;
-        System.out.println("Tiempo de ejecución: " + tiempo + "ms = " + tiempo/1000+ "s");
+        System.out.println(nombre);
+        System.out.println(tiempo + "ms = " + tiempo / 1000 + "s");
+        System.out.println(resultado);
     }
 
     /**
@@ -65,8 +72,7 @@ public class Main
      * @param archivo se usa una ruta relativa para cargar el archivo
      * @throws IOException
      */
-    static void lecturaArchivo(String archivo)
-    {
+    static void lecturaArchivo(String archivo) {
         String cadena;
         try {
             FileReader file = new FileReader(archivo);
@@ -91,10 +97,10 @@ public class Main
             }
             buffer.close();
 
-        }catch (FileNotFoundException ex){
+        } catch (FileNotFoundException ex) {
             System.out.println("Error. La ruta del archivo no es la correcta, vuelva a intenterlo.");
             System.exit(-1);
-        }catch (IOException ex){
+        } catch (IOException ex) {
             System.out.println("Error.Ha ocurrido un error interno, vuelva a intentarlo.");
             System.exit(-1);
 
@@ -105,13 +111,10 @@ public class Main
     /**
      * Método que permite mostrar la matriz
      */
-    static void mostrarMatriz()
-    {
-        for (int i = 0; i < matriz.length; i++)
-        {
-            for (int j = 0; j < matriz.length; j++)
-            {
-                System.out.print(matriz[i][j]+" ");
+    static void mostrarMatriz() {
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz.length; j++) {
+                System.out.print(matriz[i][j] + " ");
             }
             System.out.println();
         }

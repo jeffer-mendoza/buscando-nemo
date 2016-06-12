@@ -24,13 +24,12 @@ public class Avara extends AlgoritmoBusqueda {
         cola = new PriorityQueue<Nodo>(10, comparador);
     }
 
-    public void run() {
+    public String run() {
         Nodo nodoActual = null;
         buscarNodoInicialyMetas();
 
         while (true) {
             nodoActual = this.cola.remove();
-            System.out.println(nodoActual + " "+this.nodoExpandidos);
             if (nodoActual.isMeta()) {
                 if (nodoActual.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
                     this.costoTotal = nodoActual.getCostoAcumulado();
@@ -44,7 +43,7 @@ public class Avara extends AlgoritmoBusqueda {
             this.expandirNodo(nodoActual);//expandir el nodo
         }
 
-        System.out.println(this.toString());
+        return this.toString();
     }
 
     public void expandirNodo(Nodo nodo) {

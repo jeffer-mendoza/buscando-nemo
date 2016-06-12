@@ -22,7 +22,7 @@ public class AEstrella extends AlgoritmoBusqueda{
 		listadoMetas = new Point[3];
 	}
 	
-	public void run()
+	public String run()
 	{
 		Nodo nodoActual = null;
 		buscarNodoInicialyMetas();
@@ -43,9 +43,9 @@ public class AEstrella extends AlgoritmoBusqueda{
 			}
 			
 			this.expandirNodo(nodoActual);//expandir el nodo
-        }	
-				
-		System.out.println(this.toString());
+        }
+
+		return this.toString();
 	}
 	
 	public void expandirNodo(Nodo nodoActual)

@@ -200,12 +200,16 @@ public class Nodo {
      */
     public void setCostoAcumulado(double costoAcumulado) {
         //se elimina la tortuga de la matriz)
-        if (this.matriz[this.fila][this.columna] != Personaje.TORTUGA) {
+        if (this.personaje != Personaje.TORTUGA) {
             if (this.factorReduccion > 0) {
                 this.costoAcumulado = costoAcumulado + Personaje.getCosto(this.personaje) * 0.5d;
                 this.factorReduccion--;
 
                 return;
+            }
+        }else{
+            if(this.factorReduccion == 4){
+                this.matriz[this.fila][this.columna] = Personaje.DISPONIBLE;
             }
         }
 
