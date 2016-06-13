@@ -51,10 +51,19 @@ public class Amplitud extends AlgoritmoBusqueda {
     private void expandirNodo(Nodo nodo) {
         cola.removeFirst();//remover este nodo evaluado que no es meta
         this.nodoExpandidos++;//se ha expandido un nuevo nodo
-        this.historialPadres.add(nodo);//se agrega nodo al historial de padres
         byte i = nodo.getFila();//obtiene la fila del nodo actual
         byte j = nodo.getColumna();//obtiene la columna del noto actual
+        
+        /*
+         * Si el nodo a expander tiene a acuaman entonces no puede crearle hijos
+         */
+        if (nodo.getMatriz()[i][j] == Personaje.ACUAMAN) {
+			return;
+		}
+        
+        this.historialPadres.add(nodo);//se agrega nodo al historial de padres
         Nodo nodoAbuelo = this.historialPadres.get(nodo.getPadre());
+        
         if (i + 1 < this.n) {//ir a abajo
             this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodo, nodoAbuelo);
         }
@@ -90,11 +99,6 @@ public class Amplitud extends AlgoritmoBusqueda {
     private void crearNodo(byte i, byte j, int padreId, Nodo nodoActual, Nodo nodoAbuelo) {
         if (nodoActual.getMatriz()[i][j] == Personaje.ROCA) {
 
-            return;
-        }
-        if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
-            //no crea el nodo solo se suma a los expandidos
-            this.nodoExpandidos++;
             return;
         }
 

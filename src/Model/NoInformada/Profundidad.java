@@ -60,18 +60,19 @@ public class Profundidad extends AlgoritmoBusqueda {
     public void expandirNodo(Nodo nodoActual) {
         //System.out.println("Expandir: " + nodoActual+"Metas: "+nodoActual.getMetasCumplidas());
 
-        this.nodoExpandidos++;//se ha expandido un nuevo nodo        
+        this.nodoExpandidos++;//se ha expandido un nuevo nodo  
+        byte i = nodoActual.getFila();//obtiene la fila del nodo actual
+        byte j = nodoActual.getColumna();//obtiene la columna del noto actual
         
         /*
          * Si el nodo a expander tiene a acuaman entonces no puede crearle hijos
          */
-        if (nodoActual.getMatriz()[nodoActual.getFila()][nodoActual.getColumna()] == Personaje.ACUAMAN) {
+        if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
 			return;
 		}
         
-        this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres
-        byte i = nodoActual.getFila();//obtiene la fila del nodo actual
-        byte j = nodoActual.getColumna();//obtiene la columna del noto actual
+        this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres     
+        Nodo nodoAbuelo = this.historialPadres.get(nodoActual.getPadre());
         
         if (hasLoop(nodoActual)) {
         	System.out.println("ciclo detectado");
@@ -79,19 +80,19 @@ public class Profundidad extends AlgoritmoBusqueda {
         }
         
         if (i - 1 >= 0) {
-            this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodoActual);
+            this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodoActual, nodoAbuelo);
         }
 
         if (j - 1 >= 0) {
-            this.crearNodo(i, (byte) (j - 1), this.idsHistorialPadres, nodoActual);
+            this.crearNodo(i, (byte) (j - 1), this.idsHistorialPadres, nodoActual, nodoAbuelo);
         }
 
         if (i + 1 < this.n) {
-            this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodoActual);
+            this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodoActual, nodoAbuelo);
         }
 
         if (j + 1 < this.n) {
-            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodoActual);
+            this.crearNodo(i, (byte) (j + 1), this.idsHistorialPadres, nodoActual, nodoAbuelo);
         }
 
         this.idsHistorialPadres++;//aumenta el identificador de indexamiento
@@ -107,20 +108,19 @@ public class Profundidad extends AlgoritmoBusqueda {
      * @param nodoPadre nodo padre del nodo que será creado
      * @return
      */
-    private void crearNodo(byte i, byte j, int padreId, Nodo nodoActual) {
-        Nodo nodoPadre = historialPadres.get(nodoActual.getPadre());
+    private void crearNodo(byte i, byte j, int padreId, Nodo nodoActual, Nodo nodoAbuelo) {
+        
+    	if (nodoActual.getMatriz()[i][j] == Personaje.ROCA) {
 
-        if (!(i == nodoPadre.getFila() && j == nodoPadre.getColumna()) && nodoActual.getMatriz()[i][j] != 1) {
+			return;
+		}
+
+    	if(!(i == nodoAbuelo.getFila() && j == nodoAbuelo.getColumna() && nodoAbuelo.getMetaActual() == nodoActual.getMetaActual())) {
         	
             Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(), nodoActual.getFactorReduccion());
-            //if (!hasLoop(nodo, nodoActual)) {
-                nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
-                this.pila.add(nodo);
-                this.nodoCreados++;
-                //System.out.println("Crear: " + nodo);
-            //} else {
-            //    System.out.println("Ciclo detectado! " + nodo);
-            //}
+        	nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
+            this.pila.add(nodo);
+            this.nodoCreados++;
         }
     }
 
@@ -146,8 +146,7 @@ public class Profundidad extends AlgoritmoBusqueda {
 			if(nodo.getColumna() == nodoPadre.getColumna() && nodo.getFila() == nodoPadre.getFila() && 
 					nodo.getPersonaje() == nodoPadre.getPersonaje() && nodo.getMetasCumplidas() == nodoPadre.getMetasCumplidas())
 			{
-				existeCiclo = true;
-				System.out.println(nodo +" : "+nodo.getMetasCumplidas()+ " - " + nodoPadre+" : "+nodoPadre.getMetasCumplidas());
+				existeCiclo = true;				
 				break;
 			}
 			

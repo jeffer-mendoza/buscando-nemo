@@ -46,10 +46,20 @@ public class CostoUniforme extends AlgoritmoBusqueda
 	public void expandirNodo(Nodo nodoActual)
 	{
 		this.nodoExpandidos++;//se ha expandido un nuevo nodo
-        this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres
+        
         byte i = nodoActual.getFila();//obtiene la fila del nodo actual
         byte j = nodoActual.getColumna();//obtiene la columna del noto actual
+        
+        /*
+         * Si el nodo a expander tiene a acuaman entonces no puede crearle hijos
+         */
+        if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
+			return;
+		}
+        
+        this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres
 		Nodo nodoAbuelo = this.historialPadres.get(nodoActual.getPadre());
+		
 		if (i + 1 < this.n)
 		{
 			this.crearNodo((byte) (i + 1), j, this.idsHistorialPadres, nodoActual,nodoAbuelo);
@@ -84,11 +94,6 @@ public class CostoUniforme extends AlgoritmoBusqueda
     {
 		if (nodoActual.getMatriz()[i][j] == Personaje.ROCA) {
 
-			return;
-		}
-		if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
-			//no crea el nodo solo se suma a los expandidos
-			this.nodoExpandidos++;
 			return;
 		}
 

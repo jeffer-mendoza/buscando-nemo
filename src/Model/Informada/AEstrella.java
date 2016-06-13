@@ -51,9 +51,17 @@ public class AEstrella extends AlgoritmoBusqueda{
 	public void expandirNodo(Nodo nodoActual)
 	{
 		this.nodoExpandidos++;//se ha expandido un nuevo nodo
-        this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres
-        byte i = nodoActual.getFila();//obtiene la fila del nodo actual
+		byte i = nodoActual.getFila();//obtiene la fila del nodo actual
         byte j = nodoActual.getColumna();//obtiene la columna del noto actual
+		
+		/*
+         * Si el nodo a expander tiene a acuaman entonces no puede crearle hijos
+         */
+        if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
+			return;
+		}
+		
+        this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres        
 		Nodo nodoAbuelo = this.historialPadres.get(nodoActual.getPadre());
 
 		if (i - 1 >= 0)
@@ -95,12 +103,6 @@ public class AEstrella extends AlgoritmoBusqueda{
 
 			return;
 		}
-		if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
-			//no crea el nodo solo se suma a los expandidos
-			this.nodoExpandidos++;
-
-			return;
-		}
 
         if(!(i == nodoAbuelo.getFila() && j == nodoAbuelo.getColumna() && nodoAbuelo.getMetaActual() == nodoActual.getMetaActual()))
         {
@@ -123,7 +125,7 @@ public class AEstrella extends AlgoritmoBusqueda{
      */
     public double primeraHeuristica(int x, int y, Point coordenada)
     {
-        double heuristica = Math.abs(x-coordenada.getX())+Math.abs(y-coordenada.getY());
+        double heuristica = (Math.abs(x-coordenada.getX())+Math.abs(y-coordenada.getY()))*0.5;
         return heuristica;
     }
 	
@@ -155,7 +157,7 @@ public class AEstrella extends AlgoritmoBusqueda{
 			}
 		}
 		
-		Nodo primerNodo = new Nodo(0, posX, posY, this.matriz.clone(), (byte) 0, Personaje.NEMO,(byte)0);
+		Nodo primerNodo = new Nodo(0, posX, posY, this.matriz.clone(), (byte) 0, Personaje.NEMO, (byte)0);
 		primerNodo.setCostoAcumulado(0);
 		primerNodo.setValorHeuristica(this.primeraHeuristica(posX, posY, listadoMetas[0]));
 		primerNodo.setfN();
