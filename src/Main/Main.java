@@ -20,14 +20,19 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         //todo realizar el menú para seleccinar que tipo de algoritmo se desea ejecutar
         //todo la ruta de la matriz puede venir como args[] del main
-        //lecturaArchivo(args[1]);
-        //String stralgoritmo = args[0];
-    	lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba1.txt");
-        String stralgoritmo = "profundidad";
-        long tInicio = System.currentTimeMillis();
+        //Opciones para ejecutar desde la interfz grafica
+    	lecturaArchivo(args[1]);
+        String stralgoritmo = args[0];
+    	
+    	//Opcion para ejecutar pruebas internas
+    	//lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba1.txt");
+        //String stralgoritmo = "profundidad";
+        
+    	long tInicio = System.currentTimeMillis();
         long tFin = System.currentTimeMillis();
         String nombre = "";
         String resultado = "";
+        
         if (stralgoritmo.equalsIgnoreCase("amplitud")) {
             nombre = "BUSQUEDA POR AMPLITUD";
             Amplitud algoritmo = new Amplitud(matriz, tamanoMatriz);
