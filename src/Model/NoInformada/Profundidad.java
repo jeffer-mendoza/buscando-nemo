@@ -25,27 +25,29 @@ public class Profundidad extends AlgoritmoBusqueda {
     public Profundidad(byte[][] matriz, byte n) {
         super(matriz, n);
         this.pila = new Stack<Nodo>();
-
+        pila.push(this.getNodoInicial());
     }
 
-    public void run() {
+    public String run() {
         Nodo nodoActual = null;
-        buscarNodoInicial();
+
         while (this.pila.size() > 0) {
             nodoActual = this.pila.pop();
 
             if (nodoActual.isMeta()) {
                 if (nodoActual.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
-                    break;
+                	this.costoTotal = nodoActual.getCostoAcumulado();
+					this.historialPadres.add(nodoActual);
+					this.idsHistorialPadres++;                	
+                	break;
                 }
                 //System.out.println(" -- ir por "+nodoActual.getMetaActual()+ " "+nodoActual);				
                 //nodoActual.mostrarMatriz();
             }
             this.expandirNodo(nodoActual);//expandir el nodo
         }
-        this.nodoFinal = nodoActual;
-        this.costoTotal = nodoActual.getCostoAcumulado();
-        System.out.println(this.toString());
+        
+        return this.toString();
     }
 
     /**
@@ -60,10 +62,12 @@ public class Profundidad extends AlgoritmoBusqueda {
 
         this.nodoExpandidos++;//se ha expandido un nuevo nodo        
         
-        if (nodoActual.isAquaman()) {
-            //System.out.println(nodoActual +" Acuaman!!!");
-            return;
-        }
+        /*
+         * Si el nodo a expander tiene a acuaman entonces no puede crearle hijos
+         */
+        if (nodoActual.getMatriz()[nodoActual.getFila()][nodoActual.getColumna()] == Personaje.ACUAMAN) {
+			return;
+		}
         
         this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres
         byte i = nodoActual.getFila();//obtiene la fila del nodo actual
@@ -108,9 +112,8 @@ public class Profundidad extends AlgoritmoBusqueda {
 
         if (!(i == nodoPadre.getFila() && j == nodoPadre.getColumna()) && nodoActual.getMatriz()[i][j] != 1) {
         	
-            Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual());
+            Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(), nodoActual.getFactorReduccion());
             //if (!hasLoop(nodo, nodoActual)) {
-                nodo.setFactorReduccion(nodoActual.getFactorReduccion());
                 nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
                 this.pila.add(nodo);
                 this.nodoCreados++;
@@ -164,55 +167,4 @@ public class Profundidad extends AlgoritmoBusqueda {
         
         return existeCiclo;
     }
-    
-    /*
-    public boolean hasLoop(Nodo nodo, Nodo padre) {
-        
-        boolean ciclo = false;
-        List<Nodo> camino = buscarCamino(padre , nodo);
-        System.out.print("Camino: ");
-        for (int i = 0; i < camino.size(); i++) {
-            System.out.print(camino.get(i) + " - ");
-        }
-
-        for (int i = 0; i < camino.size() && !ciclo; i++) {
-            boolean posicion = nodo.getColumna() == camino.get(i).getColumna() && nodo.getFila() == camino.get(i).getFila();
-            ciclo = posicion;
-        }
-
-        return ciclo;
-    }
-    
-    private List<Nodo> buscarCamino(Nodo nodoActual, Nodo punto) {
-        List<Nodo> camino = new LinkedList<>();
-        camino.add(nodoActual);
-        if (nodoActual.getColumna() == 0 && nodoActual.getFila() == 0 && nodoActual.getPadre() == 0) {
-            return camino;
-        }
-        nodoActual = historialPadres.get(nodoActual.getPadre());
-        while (!(nodoActual.getColumna() == 0 && nodoActual.getFila() == 0 && nodoActual.getPadre() == 0)) {
-            camino.add(nodoActual);
-            nodoActual = historialPadres.get(nodoActual.getPadre());
-        }
-        camino.add(nodoActual);
-        return camino;
-    }*/
-
-    public void buscarNodoInicial() {
-        byte posX = 0;
-        byte posY = 0;
-        for (byte i = 0; i < matriz.length; i++) {
-            for (byte j = 0; j < matriz.length; j++) {
-                if (matriz[i][j] == 0) {
-                    posX = i;
-                    posY = j;
-                }
-            }
-        }
-
-        pila.add(new Nodo(0, posX, posY, this.matriz.clone(), (byte) 0, Personaje.NEMO));
-    }
-
-    
-
 }

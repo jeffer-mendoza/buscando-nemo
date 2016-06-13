@@ -4,6 +4,7 @@ import Model.Informada.AEstrella;
 import Model.Informada.Avara;
 import Model.NoInformada.Amplitud;
 import Model.NoInformada.CostoUniforme;
+import Model.NoInformada.Profundidad;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,8 +20,10 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         //todo realizar el menú para seleccinar que tipo de algoritmo se desea ejecutar
         //todo la ruta de la matriz puede venir como args[] del main
-        lecturaArchivo(args[1]);
-        String stralgoritmo = args[0];
+        //lecturaArchivo(args[1]);
+        //String stralgoritmo = args[0];
+    	lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba1.txt");
+        String stralgoritmo = "profundidad";
         long tInicio = System.currentTimeMillis();
         long tFin = System.currentTimeMillis();
         String nombre = "";
@@ -41,7 +44,10 @@ public class Main {
             } else {
                 if (stralgoritmo.equalsIgnoreCase("profundidad")) {
                     nombre = "BUSQUEDA POR PROFUNDIDAD";
-
+                    Profundidad algoritmo = new Profundidad(matriz, tamanoMatriz);
+                    tInicio = System.currentTimeMillis();
+                    resultado = algoritmo.run();
+                    tFin = System.currentTimeMillis();
                 } else {
                     if (stralgoritmo.equalsIgnoreCase("avara")) {
                         nombre = "BUSQUEDA AVARA";
