@@ -22,6 +22,8 @@ public class Profundidad extends AlgoritmoBusqueda {
 
     private Stack<Nodo> pila;
 
+    private String estadoCiclo = "Éxitoso";
+
     public Profundidad(byte[][] matriz, byte n) {
         super(matriz, n);
         this.pila = new Stack<Nodo>();
@@ -38,15 +40,13 @@ public class Profundidad extends AlgoritmoBusqueda {
                 if (nodoActual.isMetaGlobal()) {//verifica si ya se alcanzo la meta global y actualiza las variables de estado
                 	this.costoTotal = nodoActual.getCostoAcumulado();
 					this.historialPadres.add(nodoActual);
-					this.idsHistorialPadres++;                	
+					this.idsHistorialPadres++;
                 	break;
                 }
-                //System.out.println(" -- ir por "+nodoActual.getMetaActual()+ " "+nodoActual);				
-                //nodoActual.mostrarMatriz();
             }
             this.expandirNodo(nodoActual);//expandir el nodo
         }
-        
+
         return this.toString();
     }
 
@@ -70,15 +70,15 @@ public class Profundidad extends AlgoritmoBusqueda {
         if (nodoActual.getMatriz()[i][j] == Personaje.ACUAMAN) {
 			return;
 		}
-        
+
         this.historialPadres.add(nodoActual);//se agrega nodo al historial de padres     
         Nodo nodoAbuelo = this.historialPadres.get(nodoActual.getPadre());
-        
+
         if (hasLoop(nodoActual)) {
-        	System.out.println("ciclo detectado");
-        	System.exit(0);
+            return;
+        	//System.out.println("ciclo detectado");
         }
-        
+
         if (i - 1 >= 0) {
             this.crearNodo((byte) (i - 1), j, this.idsHistorialPadres, nodoActual, nodoAbuelo);
         }
@@ -109,14 +109,14 @@ public class Profundidad extends AlgoritmoBusqueda {
      * @return
      */
     private void crearNodo(byte i, byte j, int padreId, Nodo nodoActual, Nodo nodoAbuelo) {
-        
+
     	if (nodoActual.getMatriz()[i][j] == Personaje.ROCA) {
 
 			return;
 		}
 
     	if(!(i == nodoAbuelo.getFila() && j == nodoAbuelo.getColumna() && nodoAbuelo.getMetaActual() == nodoActual.getMetaActual())) {
-        	
+
             Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(), nodoActual.getFactorReduccion());
         	nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
             this.pila.add(nodo);
@@ -130,40 +130,53 @@ public class Profundidad extends AlgoritmoBusqueda {
      * @param nodo nodo a comparar
      * @return boolean
      */
-	public boolean hasLoop(Nodo nodo) 
+	public boolean hasLoop(Nodo nodo)
 	{
 		int index = nodo.getPadre();
 		Nodo nodoPadre;
 		boolean existeCiclo = false;
 		ArrayList<Nodo> camino = new ArrayList<Nodo>();
 		camino.add(nodo);
-		
+
 		while(true && this.historialPadres.size() > 1)
-		{			
+		{
 			nodoPadre = this.historialPadres.get(index);
 			camino.add(nodoPadre);
-			
-			if(nodo.getColumna() == nodoPadre.getColumna() && nodo.getFila() == nodoPadre.getFila() && 
+
+			if(nodo.getColumna() == nodoPadre.getColumna() && nodo.getFila() == nodoPadre.getFila() &&
 					nodo.getPersonaje() == nodoPadre.getPersonaje() && nodo.getMetasCumplidas() == nodoPadre.getMetasCumplidas())
 			{
-				existeCiclo = true;				
+				existeCiclo = true;
 				break;
 			}
-			
+
 			if(index == 0){
                 break;
             }
-			
+
 			index = nodoPadre.getPadre();
 		}
-		
+
 		if(existeCiclo)
-		{			
-			for (int i = camino.size()-1; i >= 0; i--) {
-				System.out.println(camino.get(i));
-			}
+		{
+            this.costoTotal = nodo.getCostoAcumulado();
+            this.historialPadres.add(nodo);
+            this.idsHistorialPadres++;
+            this.pila = new Stack<Nodo>();
+            this.estadoCiclo = "SE DETECTO CICLO, SE DETUVO LA EJECUCIÓN";
+            //for (int i = camino.size()-1; i >= 0; i--) {
+			//	System.out.println(camino.get(i));
+			//}
 		}
-        
+
         return existeCiclo;
+    }
+
+    public String getEstadoCiclo() {
+        return estadoCiclo;
+    }
+
+    public void setEstadoCiclo(String estadoCiclo) {
+        this.estadoCiclo = estadoCiclo;
     }
 }

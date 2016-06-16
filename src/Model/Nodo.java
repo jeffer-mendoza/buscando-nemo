@@ -30,11 +30,6 @@ public class Nodo {
         this.setFactorReduccion(factorReduccion);
     }
 
-
-    private void expandirNodo() {
-
-    }
-
     /**
      * Determina si este nodo es una meta
      *
@@ -251,17 +246,6 @@ public class Nodo {
         }
 
     }
-
-    public boolean equals(Nodo nodoAbuelo) {
-        if (nodoAbuelo == null) return false;
-        if (fila != nodoAbuelo.fila) return false;
-        if (columna != nodoAbuelo.columna) return false;
-        if (metasCumplidas != nodoAbuelo.metasCumplidas) return false;
-
-        return true;
-
-    }
-
 
     @Override
     public String toString() {

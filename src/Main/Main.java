@@ -21,12 +21,12 @@ public class Main {
         //todo realizar el menú para seleccinar que tipo de algoritmo se desea ejecutar
         //todo la ruta de la matriz puede venir como args[] del main
         //Opciones para ejecutar desde la interfz grafica
-    	//lecturaArchivo(args[1]);
-        //String stralgoritmo = args[0];
+    	lecturaArchivo(args[1]);
+        String stralgoritmo = args[0];
     	
     	//Opcion para ejecutar pruebas internas
-    	lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba10x10");
-        String stralgoritmo = "costouniforme";
+    	//lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba10x10");
+        //String stralgoritmo = "costouniforme";
         
     	long tInicio = System.currentTimeMillis();
         long tFin = System.currentTimeMillis();
@@ -53,6 +53,11 @@ public class Main {
                     tInicio = System.currentTimeMillis();
                     resultado = algoritmo.run();
                     tFin = System.currentTimeMillis();
+                    long tiempo = tFin - tInicio;
+                    System.out.println(nombre + " --> " +algoritmo.getEstadoCiclo());
+                    System.out.println(tiempo + "ms = " + tiempo / 1000 + "s");
+                    System.out.println(resultado);
+                    return ;
                 } else {
                     if (stralgoritmo.equalsIgnoreCase("avara")) {
                         nombre = "BUSQUEDA AVARA";

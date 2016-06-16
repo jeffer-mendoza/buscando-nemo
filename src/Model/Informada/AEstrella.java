@@ -108,7 +108,7 @@ public class AEstrella extends AlgoritmoBusqueda{
         {
             Nodo nodo = new Nodo(padreId, i, j, nodoActual.getMatriz(), nodoActual.getMetasCumplidas(), nodoActual.getMetaActual(),nodoActual.getFactorReduccion());
             nodo.setCostoAcumulado(nodoActual.getCostoAcumulado());
-            nodo.setValorHeuristica(this.primeraHeuristica(i, j, listadoMetas[nodoActual.getMetasCumplidas()]));
+            nodo.setValorHeuristica(this.primeraHeuristica(i, j, nodoActual.getMetasCumplidas()));
             nodo.setfN();
             this.cola.add(nodo);
             this.nodoCreados++;
@@ -123,10 +123,34 @@ public class AEstrella extends AlgoritmoBusqueda{
      * @param coordenada
      * @return
      */
-    public double primeraHeuristica(int x, int y, Point coordenada)
+    public double primeraHeuristica(int x, int y, int metasCumplidas)
     {
-        double heuristica = (Math.abs(x-coordenada.getX())+Math.abs(y-coordenada.getY()))*0.5;
+        double heuristica;
+        
+        if(metasCumplidas == 0)
+        {
+        	heuristica = distanciaManhattan(new Point(x, y), listadoMetas[metasCumplidas])+
+        			distanciaManhattan(listadoMetas[metasCumplidas], listadoMetas[metasCumplidas+1])+
+        			distanciaManhattan(listadoMetas[metasCumplidas+1], listadoMetas[metasCumplidas+2]);
+        }
+        else if(metasCumplidas == 1)
+        {
+        	heuristica = distanciaManhattan(new Point(x, y), listadoMetas[metasCumplidas])+
+        			distanciaManhattan(listadoMetas[metasCumplidas], listadoMetas[metasCumplidas+1]);
+        }
+        else
+        {
+        	heuristica = distanciaManhattan(new Point(x, y), listadoMetas[metasCumplidas]);
+        }
+        
+        heuristica *= 0.5;
+        
         return heuristica;
+    }
+    
+    public double distanciaManhattan(Point punto1, Point punto2)
+    {
+    	return (Math.abs(punto1.getX()-punto2.getX())+Math.abs(punto1.getY()-punto2.getY()));
     }
 	
 	public void buscarNodoInicialyMetas()
@@ -159,7 +183,7 @@ public class AEstrella extends AlgoritmoBusqueda{
 		
 		Nodo primerNodo = new Nodo(0, posX, posY, this.matriz.clone(), (byte) 0, Personaje.NEMO, (byte)0);
 		primerNodo.setCostoAcumulado(0);
-		primerNodo.setValorHeuristica(this.primeraHeuristica(posX, posY, listadoMetas[0]));
+		primerNodo.setValorHeuristica(this.primeraHeuristica(posX, posY, 0));
 		primerNodo.setfN();
 		
 		cola.add(primerNodo);
