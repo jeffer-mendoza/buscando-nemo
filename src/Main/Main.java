@@ -21,12 +21,12 @@ public class Main {
         //todo realizar el menú para seleccinar que tipo de algoritmo se desea ejecutar
         //todo la ruta de la matriz puede venir como args[] del main
         //Opciones para ejecutar desde la interfz grafica
-    	lecturaArchivo(args[1]);
-        String stralgoritmo = args[0];
+    	//lecturaArchivo(args[1]);
+        //String stralgoritmo = args[0];
     	
     	//Opcion para ejecutar pruebas internas
-    	//lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba1.txt");
-        //String stralgoritmo = "profundidad";
+    	lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba10x10");
+        String stralgoritmo = "costouniforme";
         
     	long tInicio = System.currentTimeMillis();
         long tFin = System.currentTimeMillis();
