@@ -25,7 +25,7 @@ public class Main {
         String stralgoritmo = args[0];
     	
     	//Opcion para ejecutar pruebas internas
-    	//lecturaArchivo("/home/desarrollo/workspace/buscando-nemo/pruebas/prueba1.txt");
+    	//lecturaArchivo("pruebas/prueba1.txt");
         //String stralgoritmo = "profundidad";
         
     	long tInicio = System.currentTimeMillis();
@@ -53,6 +53,11 @@ public class Main {
                     tInicio = System.currentTimeMillis();
                     resultado = algoritmo.run();
                     tFin = System.currentTimeMillis();
+                    long tiempo = tFin - tInicio;
+                    System.out.println(nombre + " --> " +algoritmo.getEstadoCiclo());
+                    System.out.println(tiempo + "ms = " + tiempo / 1000 + "s");
+                    System.out.println(resultado);
+                    return ;
                 } else {
                     if (stralgoritmo.equalsIgnoreCase("avara")) {
                         nombre = "BUSQUEDA AVARA";
