@@ -16,9 +16,8 @@ public class Amplitud extends AlgoritmoBusqueda {
     public Amplitud(byte[][] matriz, byte n) {
         super(matriz, n);
         this.cola = new LinkedList<Nodo>();//se inicializa la cola
-        Nodo nodo = new Nodo(0, (byte) 0, (byte) 0, this.matriz.clone(), (byte) -99, Personaje.NEMO, (byte) 0);
         this.cola.add(this.getNodoInicial());
-        this.expandirNodo(nodo);//se expanden los nodos de la raiz
+        this.expandirNodo(this.cola.getFirst());//se expanden los nodos de la raiz
     }
 
 
